@@ -1,0 +1,81 @@
+version: "3"
+
+networks:
+  pvc:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
+
+services:
+
+  sql:
+    image: ${DBS_SERVERS_SQL_IMAGE}
+    container_name: sql-${DBS_NAME}
+    restart: always
+    volumes:
+        - ./conf/sql.cnf:/etc/mysql/conf.d/custom.cnf
+        - ${DBS_SHARED_SQL}:/var/lib/mysql
+    environment:
+        - MYSQL_ROOT_PASSWORD=${DBS_SERVERS_SQL_ROOT_PASSWORD}
+    ports:
+        - 3306:3306
+    networks:
+      pvc:
+        ipv4_address: 172.20.0.5
+
+
+  sql-web:
+    image: ${DBS_PANELS_SQL_IMAGE}
+    container_name: sql-web-${DBS_NAME}
+    restart: always
+    volumes:
+        - ./conf/php.ini:/usr/local/etc/php/conf.custom
+    environment:
+        - PMA_HOST=sql-${DBS_NAME}
+        - PMA_PORT="3306"
+        - PMA_USER=root
+        - PMA_PASSWORD=${DBS_SERVERS_SQL_ROOT_PASSWORD}
+        - MYSQL_ROOT_PASSWORD=${DBS_SERVERS_SQL_ROOT_PASSWORD}
+    links:
+      - sql
+    ports:
+        - ${DBS_PANELS_SQL_PORT}:80
+    networks:
+      pvc:
+        ipv4_address: 172.20.0.6
+
+
+  nosql:
+    image: ${DBS_SERVERS_NOSQL_IMAGE}
+    container_name: nosql-${DBS_NAME}
+    restart: always
+    volumes:
+        - ./conf/mongod.conf:/etc/mongod.conf
+        - ${DBS_SHARED_NOSQL}:/data/db
+    environment:
+        - MONGO_INITDB_ROOT_USERNAME=root
+        - MONGO_INITDB_ROOT_PASSWORD=${DBS_SERVERS_NOSQL_ROOT_PASSWORD}
+    command: ["mongod", "--config", "/etc/mongod.conf"]
+    ports:
+        - 27017:27017
+    networks:
+      pvc:
+        ipv4_address: 172.20.0.7
+
+
+  nosql-web:
+    image: ${DBS_PANELS_NOSQL_IMAGE}
+    container_name: nosql-web-${DBS_NAME}
+    restart: always
+    environment:
+        #- ME_CONFIG_MONGODB_ENABLE_ADMIN=true
+        - ME_CONFIG_MONGODB_ADMINUSERNAME=root
+        - ME_CONFIG_MONGODB_ADMINPASSWORD=${DBS_SERVERS_NOSQL_ROOT_PASSWORD}
+        - ME_CONFIG_MONGODB_SERVER=nosql-${DBS_NAME}
+    links:
+      - nosql
+    ports:
+        - ${DBS_PANELS_NOSQL_PORT}:8081
+    networks:
+      pvc:
+        ipv4_address: 172.20.0.8

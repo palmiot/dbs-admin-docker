@@ -1,0 +1,9 @@
+!.gitignore
+/.env
+/conf/mongod.conf
+/conf/php.ini
+/conf/sql.cnf
+/databases/sql/*
+!/databases/sql/.gitkeep
+/databases/nosql/*
+!/databases/nosql/.gitkeep
