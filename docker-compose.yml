@@ -4,7 +4,7 @@ networks:
   pvc:
     ipam:
       config:
-        - subnet: 172.20.0.0/24
+        - subnet: ${DBS_NETWORK}
 
 services:
 
@@ -18,10 +18,10 @@ services:
     environment:
         - MYSQL_ROOT_PASSWORD=${DBS_SERVERS_SQL_ROOT_PASSWORD}
     ports:
-        - 3306:3306
+        - ${DBS_SERVERS_SQL_PORT}:3306
     networks:
       pvc:
-        ipv4_address: 172.20.0.5
+        ipv4_address: ${DBS_SERVERS_SQL_IP}
 
 
   sql-web:
@@ -42,7 +42,7 @@ services:
         - ${DBS_PANELS_SQL_PORT}:80
     networks:
       pvc:
-        ipv4_address: 172.20.0.6
+        ipv4_address: ${DBS_PANELS_SQL_IP}
 
 
   nosql:
@@ -57,10 +57,10 @@ services:
         - MONGO_INITDB_ROOT_PASSWORD=${DBS_SERVERS_NOSQL_ROOT_PASSWORD}
     command: ["mongod", "--config", "/etc/mongod.conf"]
     ports:
-        - 27017:27017
+        - ${DBS_SERVERS_NOSQL_PORT}:27017
     networks:
       pvc:
-        ipv4_address: 172.20.0.7
+        ipv4_address: ${DBS_SERVERS_NOSQL_IP}
 
 
   nosql-web:
@@ -78,4 +78,4 @@ services:
         - ${DBS_PANELS_NOSQL_PORT}:8081
     networks:
       pvc:
-        ipv4_address: 172.20.0.8
+        ipv4_address: ${DBS_PANELS_NOSQL_IP}

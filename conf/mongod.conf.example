@@ -1,5 +1,9 @@
+# Keep this, please.
+
 storage:
   dbPath: /data/db
 net:
   port: 27017
   bindIp: 0.0.0.0
+
+# Changes bellow.

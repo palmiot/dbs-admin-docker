@@ -8,9 +8,9 @@ This is a little and portable ecosystem for store or manage SQL and NoSQL databa
 Firstly you need made a copy of the next files for customize later as your preferences:
 
 - `.env.example` to `.env`.
-- (optional) `conf/mongod.conf.example` to `conf/mongod.conf`.
-- (optional) `conf/php.ini.example` to `conf/php.ini`.
-- (optional) `conf/sql.cnf.example` to `conf/sql.cnf`.
+- `conf/mongod.conf.example` to `conf/mongod.conf`.
+- `conf/php.ini.example` to `conf/php.ini`.
+- `conf/sql.cnf.example` to `conf/sql.cnf`.
 
 Using `docker-compose` becouse it's easy implement all.
 
@@ -39,7 +39,7 @@ http://172.20.0.8:8081 ( Mongo-express for NoSQL databases)
 or
 
 ```
-http://locahost:30080 ( PhpMyAdmin for SQL databases)
+http://localhost:30080 ( PhpMyAdmin for SQL databases)
 http://localhost:30081 ( Mongo-express for NoSQL databases)
 ```
 
@@ -55,19 +55,26 @@ You can set customized options into the file `.env` and optional configurations 
 
 | Variables | description | default |
 | ------------- | ------------- | ------------- |
-| DBS_NAME | name of implementation, is irrelevant. | dbs-admin |
-| DBS_SHARED_SQL | (path) directory of SQL storage. | /tmp/databases/sql |
-| DBS_SHARED_NOSQL | (path) directory of NoSQL storage. | ./databases/nosql |
+| DBS_NAME | (string) Name of implementation, is irrelevant. | dbs-admin |
+| DBS_NETWORK | (net) Configure a default network. | 172.20.0.0/24 |
+| DBS_SHARED_SQL | (path) Directory of SQL storage. | ./databases/sql |
+| DBS_SHARED_NOSQL | (path) Directory of NoSQL storage. | ./databases/nosql |
 | DBS_SERVERS_SQL_IMAGE | (image:tag) Docker of SQL server. | mysql:latest |
-| DBS_SERVERS_SQL_ROOT_PASSWORD | (string) the password for root user. | root |
+| DBS_SERVERS_SQL_IP | (string ip) IP of SQL server. | 172.20.0.5 |
+| DBS_SERVERS_SQL_PORT | (integer) Port of endpoint access. | 3306 |
+| DBS_SERVERS_SQL_ROOT_PASSWORD | (string) The password for root user. | root |
 | DBS_SERVERS_NOSQL_IMAGE | (image:tag) Docker of NoSQL server. | mongo:latest |
-| DBS_SERVERS_NOSQL_ROOT_PASSWORD | (string) the password for root user. | root |
+| DBS_SERVERS_NOSQL_IP | (string ip) IP of SQL server. | 172.20.0.7 |
+| DBS_SERVERS_NOSQL_PORT | (integer) Port of endpoint access. | 27017 |
+| DBS_SERVERS_NOSQL_ROOT_PASSWORD | (string) The password for root user. | root |
 | DBS_PANELS_SQL_IMAGE | (image:tag) Docker of PhpMyAdmin. | phpmyadmin/phpmyadmin:latest |
-| DBS_PANELS_SQL_PORT | (integer) port of endpoint access. | 30080 |
+| DBS_PANELS_SQL_IP | (string ip) IP of PhpMyAdmin panel. | 172.20.0.6 |
+| DBS_PANELS_SQL_PORT | (integer) Port of endpoint access. | 30080 |
 | DBS_PANELS_NOSQL_IMAGE | (image:tag) Docker of Mongo-Express. | mongo-express:latest |
-| DBS_PANELS_NOSQL_PORT | (integer) port of endpoint access. | 30081 |
+| DBS_PANELS_NOSQL_IP | (string ip) IP of Mongo-Express panel. | 172.20.0.8 |
+| DBS_PANELS_NOSQL_PORT | (integer) Port of endpoint access. | 30081 |
 
 
 ### Files into the directory `./conf/*`
 
-This files means a basic implement of attributes of `my.cnf`, `mongodb.conf` and `php.ini` configuration files. You can add here your rules for these files.
+This files means a basic implement of attributes of `my.cnf` (`sql.cnf`), `mongodb.conf` and `php.ini` configuration files. You can add your rules into these files.
